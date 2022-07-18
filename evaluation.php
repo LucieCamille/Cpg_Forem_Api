@@ -36,9 +36,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') :
   //decoder le file json en php en mode objet
   $arrayJson = json_decode($json, true);
   //définir la requête
-  if(isset($arrayJSON['id_training']) AND isset($arrayJSON['id_user'])) :
+  if(isset($_GET['id_training']) AND isset($_GET['id_user'])) :
     $sql = sprintf("INSERT INTO evaluation SET date_evaluation='%s', id_training=%s, id_user=%s, count=%d, analyse=%d, interest=%d, autonomy=%d, criticism=%d, organized=%d, motivation=%d",
-      strip_tags(addslashes($arrayJSON['date'])),
+      strip_tags(addslashes($arrayJSON['date_evaluation'])),
       $_GET['id_training'],
       $_GET['id_user'],
       strip_tags($arrayJSON['count']),

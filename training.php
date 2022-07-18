@@ -9,14 +9,14 @@ include "verif_auth.php";
 //Pour tout ce qui gère la méthode GET:
 if($_SERVER['REQUEST_METHOD'] == 'GET') :
   //définir ma requete
-  if(isset($_GET['id_training'])) :
+  if(isset($_GET['id_job'])) :
     //récupérer une formation par l'id du job
-    $sql = sprintf("SELECT training.*, job.*, center.id_center, center.organisation, user.id_user, user.id_status, user.name, user.firstname FROM `training` JOIN job ON training.id_job = job.id_job JOIN center ON training.id_center = center.id_center JOIN user ON training.id_instructor = user.id_status WHERE id_job = %d", $_GET['id_job']);
+    $sql = sprintf("SELECT training.*, job.*, center.id_center, center.organisation, user.id_user, user.id_status, user.name, user.firstname FROM `training` JOIN job ON training.id_job = job.id_job JOIN center ON training.id_center = center.id_center JOIN user ON training.id_instructor = user.id_user WHERE training.id_job = %d", $_GET['id_job']);
     $response['response'] = 'A training infos with job id ' . $_GET['id_job'];
 
   else :
     //récup toutes les formations
-    $sql = sprintf("SELECT training.*, job.*, center.id_center, center.organisation, user.id_user, user.id_status, user.name, user.firstname FROM `training` JOIN job ON training.id_job = job.id_job JOIN center ON training.id_center = center.id_center JOIN user ON training.id_instructor = user.id_status ORDER BY job.title ASC");
+    $sql = sprintf("SELECT training.*, job.*, center.id_center, center.organisation, user.id_user, user.id_status, user.name, user.firstname FROM `training` JOIN job ON training.id_job = job.id_job JOIN center ON training.id_center = center.id_center JOIN user ON training.id_instructor = user.id_user ORDER BY job.title ASC");
     $response['response'] = "All training with there related job";
     
   endif;
@@ -37,31 +37,20 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') :
   $json = file_get_contents('php://input');
   //decoder le file json en php en mode objet
   $objectPost = json_decode($json);
-  //Switch: si pas id post dans le json, on le crée avec valeur 0
-  //$objectPost->id_posts = (isset($objectPost->id_category)) ? $objectPost->id_category : 0;
-  //définir première requête
-  $sql = sprintf("SELECT * FROM job WHERE id_job = %d", $_GET['id_job']);
-  $result = $connect->query($sql);
+  //requete
+  $sql = sprintf("INSERT INTO training SET id_job=%d, label='%s', start_date='%s', id_center=%s, id_instructor=%s",
+    strip_tags(addslashes($objectPost->id_job)),
+    strip_tags(addslashes($objectPost->label)),
+    strip_tags(addslashes($objectPost->start_date)),
+    strip_tags(addslashes($objectPost->id_center)),
+    strip_tags(addslashes($objectPost->id_instructor))
+  );
+  //faire la requête
+  $connect->query($sql);
   echo $connect->error;
-  //si le résultat de la requête existe, alors on peut faire l'insert
-  if($result->num_rows > 0):
-    //définir la seconde requête  
-    $sql = sprintf("INSERT INTO training SET id_job=%d, label='%s', date=CURRENT_DATE(), id_center=%s, id_instructor=%s",
-      $_GET['id_job'],
-      strip_tags(addslashes($objectPost->label)),
-      strip_tags(addslashes($objectPost->id_center)),
-      strip_tags(addslashes($objectPost->id_instructor))
-    );
-    //faire la requête
-    $connect->query($sql);
-    echo $connect->error;
-    $response['response'] = "New training on job with id " . $_GET['id_job'];
-    $response['new_id'] = $connect->insert_id;
-  // si id de la cat n'existe pas:
-  else :
-    $response['response'] = "Job id doesnt exist";
-    $response['code'] = 500;
-  endif;
+  $response['response'] = "New training";
+  $response['new_id'] = $connect->insert_id;
+
 endif; //fin méthode POST
 
 // //----------------------------------------

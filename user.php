@@ -10,12 +10,12 @@ include "verif_auth.php";
 if($_SERVER['REQUEST_METHOD'] == 'GET') :
   //définir ma requete
   if(isset($_GET['id_user'])) :
-    $sql = sprintf("SELECT user.*, status.* FROM `user` JOIN status ON user.id_status = status.id_status WHERE id_user = %d", $_GET['id_user']);
-    $response['response'] = 'A user with id ' . $_GET['id_posts'];
+    $sql = sprintf("SELECT user.*, status.* FROM `user` LEFT JOIN status ON user.id_status = status.id_status WHERE id_user = %d", $_GET['id_user']);
+    $response['response'] = 'A user with id ' . $_GET['id_user'];
 
   else :
     //récup tous les post
-    $sql = sprintf("SELECT user.*, status.* FROM `user` JOIN status ON user.id_status = status.id_status ORDER BY id_status ASC");
+    $sql = sprintf("SELECT user.*, status.* FROM `user` LEFT JOIN status ON user.id_status = status.id_status");
     $response['response'] = "All users by status";
     
   endif;

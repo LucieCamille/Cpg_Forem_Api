@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') :
   echo $connect->error;
 
   //récupérer le résultat (result), qui est un array associatif, dans 'data' d'un array normal(response)
-  $response['data'] = $result->fetch_all(MYSQLI_ASSOC);
+  $response['datas'] = $result->fetch_all(MYSQLI_ASSOC);
   //afficher le nombre d'entrées
   $response['nb_hits'] = $result->num_rows;
 endif; //fin de la methode GET

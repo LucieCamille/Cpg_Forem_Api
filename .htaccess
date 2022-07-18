@@ -29,3 +29,6 @@ RewriteRule user$ user.php [L]
 
 RewriteRule center/([0-9]+)$ center.php?id_center=$1 [L]
 RewriteRule center$ center.php [L]
+
+RewriteRule knowhow/([0-9]+)$ knowhow.php?id_knowhow=$1 [L]
+RewriteRule knowhow$ knowhow.php [L]
