@@ -8,7 +8,8 @@ include "verif_auth.php";
 
 //Pour tout ce qui gère la méthode GET:
 if($_SERVER['REQUEST_METHOD'] == 'GET') :
-  //définir ma requete
+  //-------
+  //définir requete pour un ou tous les user
   if(isset($_GET['id_user'])) :
     $sql = sprintf("SELECT user.*, status.* FROM `user` LEFT JOIN status ON user.id_status = status.id_status WHERE id_user = %d", $_GET['id_user']);
     $response['response'] = 'A user with id ' . $_GET['id_user'];
@@ -22,11 +23,47 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') :
   //faire la requete
   $result = $connect->query($sql);
   echo $connect->error;
-
   //récupérer le résultat (result), qui est un array associatif, dans 'data' d'un array normal(response)
   $response['data'] = $result->fetch_all(MYSQLI_ASSOC);
   //afficher le nombre d'entrées
   $response['nb_hits'] = $result->num_rows;
+  
+  //--------
+  //faire un search de user en fonction du status
+  if (isset($_GET['type'])) : 
+    $sql = sprintf("SELECT user.*, status.* FROM `user` LEFT JOIN status ON user.id_status = status.id_status WHERE status.state = '%s'",
+        $_GET['type']
+    );
+    //lancer requête
+    $result = $connect->query($sql);
+    if($result->num_rows > 0) :
+      $response['data'] = $result->fetch_all(MYSQLI_ASSOC);
+      $response['nb_hits'] = $result->num_rows;
+    else :
+      $response['nb_hits'] = 0;
+      $response['code'] = 404;
+    endif;
+  endif;
+
+  //--------
+  //faire un search de user en fonction du nom/prenom et du type
+  if (isset($_GET['search']) AND isset($_GET['type'])) : 
+    $sql = sprintf("SELECT user.*, status.* FROM `user` LEFT JOIN status ON user.id_status = status.id_status WHERE (user.name LIKE '%s%%' OR user.firstname LIKE '%s%%') AND status.state = '%s'",
+        $_GET['search'],
+        $_GET['search'],
+        $_GET['type']
+    );
+    //lancer requête
+    $result = $connect->query($sql);
+    if($result->num_rows > 0) :
+      $response['data'] = $result->fetch_all(MYSQLI_ASSOC);
+      $response['nb_hits'] = $result->num_rows;
+    else :
+      $response['nb_hits'] = 0;
+      $response['code'] = 404;
+    endif;
+  endif;
+
 endif; //fin de la methode GET
 
 

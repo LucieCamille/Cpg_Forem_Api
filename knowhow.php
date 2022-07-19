@@ -9,7 +9,22 @@ include "verif_auth.php";
 //Pour tout ce qui gère la méthode GET:
 if($_SERVER['REQUEST_METHOD'] == 'GET') :
   //définir ma requete
-  if(isset($_GET['id_knowhow'])) :
+  if(isset($_GET['id_job'])) :
+    $sql = sprintf("SELECT * FROM `knowhow` WHERE id_job = %d", $_GET['id_job']);
+    $response['response'] = 'A knowhow with job id ' . $_GET['id_job'] . ' and the related answers';
+    //recup des behavior du knowhow sélectionné
+    $sql_behavior = sprintf("SELECT behavior.*, knowhow.id_job FROM behavior JOIN knowhow ON behavior.id_knowhow = knowhow.id_knowhow WHERE knowhow.id_job = %d", $_GET['id_job']);
+    $result_behavior = $connect->query($sql_behavior);
+    //si il y a des produits, on crée une entrée 'produits' dans $response
+    if($result_behavior->num_rows > 0):
+        $response["behavior"]["data"] = $result_behavior->fetch_all(MYSQLI_ASSOC);
+        $response["behavior"]["nb_hits"] = $result_behavior->num_rows;
+    else:
+        //si pas de produit, nb_hits des produits = 0
+        $response['behavior']["nb_hits"] = 0;
+    endif;
+
+  elseif(isset($_GET['id_knowhow'])) :
     $sql = sprintf("SELECT * FROM `knowhow` WHERE id_knowhow = %d", $_GET['id_knowhow']);
     $response['response'] = 'A knowhow with id ' . $_GET['id_knowhow'] . ' and the related answers';
     //recup des behavior du knowhow sélectionné

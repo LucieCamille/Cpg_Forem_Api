@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') :
     $response['response'] = 'Evaluation from user with id ' . $_GET['id_user'];
 
   else :
-    $sql = "SELECT * FROM evaluation ORDER BY id_user ASC";
+    $sql = "SELECT * FROM evaluation";
     $response['response'] = "All evaluation";
     
   endif;
@@ -36,11 +36,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') :
   //decoder le file json en php en mode objet
   $arrayJson = json_decode($json, true);
   //définir la requête
-  if(isset($_GET['id_training']) AND isset($_GET['id_user'])) :
+  //if(isset($_GET['id_training']) AND isset($_GET['id_user'])) :
     $sql = sprintf("INSERT INTO evaluation SET date_evaluation='%s', id_training=%s, id_user=%s, count=%d, analyse=%d, interest=%d, autonomy=%d, criticism=%d, organized=%d, motivation=%d",
       strip_tags(addslashes($arrayJSON['date_evaluation'])),
-      $_GET['id_training'],
-      $_GET['id_user'],
+      strip_tags($arrayJSON['id_training']),
+      strip_tags($arrayJSON['id_user']),
       strip_tags($arrayJSON['count']),
       strip_tags($arrayJSON['analyse']),
       strip_tags($arrayJSON['interest']),
@@ -52,12 +52,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') :
     //faire la requête
     $connect->query($sql);
     echo $connect->error;
-    $response['response'] = "New evaluation for user " . $_GET['id_user'] . " for training with id" . $_GET['id_training'];
+    $response['response'] = "New evaluation";
     $response['new_id'] = $connect->insert_id;
-  else : 
-    $response['response'] = "id training and/or id user is missing";
-    $response['code'] = 500;
-  endif;
+  // else : 
+  //   $response['response'] = "id training and/or id user is missing";
+  //   $response['code'] = 500;
+  // endif;
 endif; //fin méthode POST
 
 // //-------------------------------------

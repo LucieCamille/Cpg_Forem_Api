@@ -12,6 +12,7 @@ RewriteRule training/([0-9]+)$ training.php?id_job=$1 [L]
 RewriteRule training$ training.php [L]
 
 RewriteRule inscription/([0-9]+)/([0-9]+)$ inscription.php?id_training=$1&id_user=$2 [L]
+RewriteRule inscription/([0-9]+)$ inscription.php?id_inscription=$1 [L]
 RewriteRule inscription$ inscription.php [L]
 
 RewriteRule job/([0-9]+)$ job.php?id_job=$1 [L]
@@ -23,6 +24,7 @@ RewriteRule evaluation/([0-9]+)$ evaluation.php?id_user=$1 [L]
 #RewriteRule evaluation/([0-9]+)$ evaluation.php?id_evaluation=$1 [L]
 RewriteRule evaluation$ evaluation.php [L]
 
+# RewriteRule user/([a-zA-Z]+)/([0-9])$ user.php?search=$1&type=$2 [L]
 RewriteRule user/([0-9]+)$ user.php?id_user=$1 [L]
 #RewriteRule user/([0-9]+)$ user.php?id_status=$1 [L]
 RewriteRule user$ user.php [L]
