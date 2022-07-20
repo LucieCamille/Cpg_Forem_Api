@@ -22,6 +22,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') :
     );
     $response['response'] = 'All inscription for training with id ' . $_GET['id_training'];
 
+  elseif(isset($_GET['id_user'])) :
+    $sql = sprintf("SELECT inscription.*, training.*, user.* FROM `inscription` JOIN training ON inscription.id_training = training.id_training JOIN user ON inscription.id_user=user.id_user WHERE user.id_user = %d",
+        $_GET['id_user']
+    );
+    $response['response'] = 'All inscription for user with id ' . $_GET['id_user'];
+
   elseif(isset($_GET['id_inscription'])) :
     $sql = sprintf("SELECT * FROM `inscription` WHERE id_inscription = %d", $_GET['id_inscription']);
     $response['response'] = 'One inscription with id ' . $_GET['id_inscription'];

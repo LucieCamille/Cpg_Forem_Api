@@ -54,7 +54,7 @@ else:
     $_SESSION['expiration'] = time() + 1 * 600;
     $response['response'] = "Connected";
     $response['token'] = $_SESSION['token'];
-    // $response['id_user'] = $_SESSION['user'];
+    $response['id_user'] = $_SESSION['user'];
     
   endif;
 endif;

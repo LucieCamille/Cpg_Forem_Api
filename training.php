@@ -13,6 +13,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') :
     //récupérer une formation par l'id du job
     $sql = sprintf("SELECT training.*, job.*, center.id_center, center.organisation, user.id_user, user.id_status, user.name, user.firstname FROM `training` JOIN job ON training.id_job = job.id_job JOIN center ON training.id_center = center.id_center JOIN user ON training.id_instructor = user.id_user WHERE training.id_job = %d", $_GET['id_job']);
     $response['response'] = 'A training infos with job id ' . $_GET['id_job'];
+  
+  elseif(isset($_GET['id_training'])) :
+    //récupérer une formation par l'id du training
+    $sql = sprintf("SELECT training.*, job.*, center.id_center, center.organisation, user.id_user, user.id_status, user.name, user.firstname FROM `training` JOIN job ON training.id_job = job.id_job JOIN center ON training.id_center = center.id_center JOIN user ON training.id_instructor = user.id_user WHERE training.id_training = %d", $_GET['id_training']);
+    $response['response'] = 'A training infos with job id ' . $_GET['id_training'];
 
   else :
     //récup toutes les formations

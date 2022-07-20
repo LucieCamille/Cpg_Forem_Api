@@ -9,7 +9,11 @@ include "verif_auth.php";
 //Pour tout ce qui gère la méthode GET:
 if($_SERVER['REQUEST_METHOD'] == 'GET') :
   //définir ma requete
-  if(isset($_GET['id_user'])) :
+  if (isset($_GET['id_user']) AND isset($_GET['id_training'])) :
+    $sql = sprintf("SELECT * FROM evaluation WHERE id_user = %d AND id_training = %d", $_GET['id_user'], $_GET['id_training']);
+    $response['response'] = 'Nb evaluation for one user';
+    
+  elseif(isset($_GET['id_user'])) :
     $sql = sprintf("SELECT * FROM evaluation WHERE id_user = %d", $_GET['id_user']);
     $response['response'] = 'Evaluation from user with id ' . $_GET['id_user'];
 
